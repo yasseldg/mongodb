@@ -1,0 +1,28 @@
+version: "3.9"
+
+services:
+  mongo_db:
+    image: mongo:6.0.2-focal
+    container_name: mongo_db
+    restart: always
+    mem_limit: 2g
+    environment:
+      TZ: UTC
+      MONGO_INITDB_ROOT_USERNAME: ${ROOT_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${ROOT_PASS}
+      READ_USERNAME: ${READ_USER}
+      READ_PASSWORD: ${READ_PASS}
+      WRITE_USERNAME: ${WRITE_USER}
+      WRITE_PASSWORD: ${WRITE_PASS}
+    volumes:
+      - ./data:/data/db
+      - ./backups:/backups
+      - ./init-mongo.sh:/docker-entrypoint-initdb.d/init-mongo.sh:ro
+    ports:
+      - 27017:27017
+    networks:
+      - go_dev
+
+networks:
+  go_dev:
+    name: go_dev
